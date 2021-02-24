@@ -58,4 +58,10 @@ pick the best-sized image based on its own understanding of how it will render t
 {{else if default_image}}src="{{cdn default_image}}" alt="{{lang 'products.card_default_image_alt'}}"{{/if}}
 class="{{#unless lazyload '==' 'disabled'}}lazyload{{/unless}}{{#if class}} {{class}}{{/if}}"
 {{#if lazyload '==' 'lazyload'}}loading="lazy"{{/if}}
-{{otherAttributes}} {{#if data-hoverimage}}data-hoverimage="{{getImageSrcset images.1.data 1x=(default fallback_size '160w')}}"{{/if}} />
+{{otherAttributes}}
+data-src="{{getImageSrcset image 1x=(default fallback_size '160w')}}"
+data-alt="{{image.alt}}"
+data-newAlt="{{images.1.alt}}"
+data-hoverimage={{#replace '{:size}' images.1.data}}640w{{/replace}}
+data-test="https://cdn11.bigcommerce.com/s-gg8icx1vqj/images/stencil/640w/products/112/377/bigfoot2__26283.1613768924.jpg?c=1"
+/>

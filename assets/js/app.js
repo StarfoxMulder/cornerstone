@@ -96,3 +96,62 @@ window.stencilBootstrap = function stencilBootstrap(pageType, contextJSON = null
         },
     };
 };
+
+// Functionality for alternating the card image src on hover
+
+// $('img.card-image').hover(
+//     function() {
+//       var image = $(this).find('.card-image');
+//       var newImg = image.attr('data-hoverimage');
+//       var currentImg = image.attr('src');
+//         if (newImg && newImg != '') image.attr('src', newImg);
+//    }, function() {
+//       var image = $(this).find('.card-image');
+//       var newImg = image.attr('data-src');
+//       var currentImg = image.attr('src');
+//         if (newImg && newImg != '') image.attr('src', newImg);
+//     }
+// );
+
+// document.addEventListener("DOMContentLoaded", function(){
+    // var testUrl = $('img.card-image').dataset.test;
+    // console.log(testUrl);
+    
+    // document.querySelectorAll('img.card-image').addEventListener('mouseover', function() {
+    //     console.log(this);
+    //     var hoverImgSrc = document.querySelectorAll('img.card-image').getAttribute('data-test');
+    //     this.src = hoverImgSrc;
+    // });
+
+    // $('img.card-image').addEventListener('mouseover', function(){
+    //     console.log(this.dataset.test)
+    // });
+
+    $('.card-figure').hover(
+    	function() {
+            var image = $(this).find('.card-image');
+            var newImg = image.attr('data-hoverimage');
+            var currentImg = image.attr('src');
+            if (newImg && newImg != '') image.attr('src', newImg);
+
+            var newAlt = image.attr('data-newAlt');
+            var currentAlt = image.attr('alt');
+            if (newAlt && newAlt != '') image.attr('alt', newAlt);
+            if (newAlt && newAlt != '') image.attr('title', newAlt);
+
+       }, function() {
+            var image = $(this).find('.card-image');
+            var newImg = image.attr('data-src');
+            var currentImg = image.attr('src');
+            if (newImg && newImg != '') image.attr('src', newImg);
+
+            var newAlt = image.attr('data-alt');
+            var currentAlt = image.attr('alt');
+            if (newAlt && newAlt != '') image.attr('alt', newAlt);
+            if (newAlt && newAlt != '') image.attr('title', newAlt);
+    	}
+    );
+
+// });
+
+
