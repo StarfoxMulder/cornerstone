@@ -1,6 +1,7 @@
 __webpack_public_path__ = window.__webpack_public_path__; // eslint-disable-line
 
 import Global from './theme/global';
+// import Cart from './theme/cart';
 
 const getAccount = () => import('./theme/account');
 const getLogin = () => import('./theme/auth');
@@ -151,6 +152,115 @@ window.stencilBootstrap = function stencilBootstrap(pageType, contextJSON = null
             if (newAlt && newAlt != '') image.attr('title', newAlt);
     	}
     );
+
+    $("#customAtC").click(
+        function(){
+            var cartId = $(this).attr('data-cartid');
+
+            if(!cartId){
+                createCart('/api/storefront/carts', {
+                    "lineItems": [
+                        {
+                            "quantity":1,
+                            "productId": 112
+                        }
+                    ]
+                })
+                // .then(data => console.log(data))
+                .then(data => $(this).attr('data-cartid', data.id))
+                .catch(error => console.error(error));
+            }
+            else {
+                $.get("/cart.php?action=add&product_id=112");
+            }
+            console.log(cartId)
+
+
+            var quantity, removeAllItems;
+            removeAllItems = $("span.remove-all-items");
+            getCart('/api/storefront/carts')
+            .then(data => validateData(data))
+            .catch(error => console.error(error));
+
+            // $("span.cart-quantity").text(quantity);
+            $('.cart-quantity').removeClass('countPill--positive', quantity = 0)
+            $('.cart-quantity').addClass('countPill--positive', quantity > 0)
+
+            $(".itemAddedNote").show("slow")
+            setTimeout(function(){$(".itemAddedNote").hide("slow")}, 3000)
+
+
+            //$('body').trigger('cart-quantity-update', cartNum);
+
+            $(".itemAddedNote").show("slow")
+            // cartNum = data.lineItems.physicalItems.quantity
+            // data[0].lineItems.physicalItems.quantity
+            // countPill cart-quantity countPill--positive
+            // quantity = data[0].lineItems.physicalItems[0].quantity
+
+        }
+    );
+
+    $("#closeDM").click(
+        function() {
+            $("#dialog-message").hide("slow");
+        }
+    );
+    
+    function validateData(data){
+        var quantityV;
+        console.log(data[0])
+        if (data[0].lineItems.physicalItems[0].quantity){
+            quantityV = data[0].lineItems.physicalItems[0].quantity
+            quantityV+=1
+        }
+        else {
+            quantityV=0;
+        }
+        console.log(quantityV)
+        $("span.cart-quantity").text(quantityV);
+
+        return quantityV
+    }
+
+    function getCart(url) {
+        return fetch(url, {
+            method: "GET",
+            credentials: "same-origin"
+        })
+        .then(response => response.json());
+    };
+
+    function createCart(url, cartItems) {
+        return fetch(url, {
+            method: "POST",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json"},
+            body: JSON.stringify(cartItems),
+        })
+        .then(response => response.json());
+    };
+
+    function addCartItem(url, cartId, cartItems) {
+        return fetch(url + cartId + '/items', {
+            method: "POST",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json"},
+            body: JSON.stringify(cartItems),
+        })
+        .then(response => response.json());
+   };
+
+    function deleteCart(url, cartId) {
+        return fetch(url + cartId + '/items/', {
+            method: "DELETE",
+            credentials: "same-origin",
+            headers: {"Content-Type": "application/json",}
+        })
+        .then(response => response.json());
+    };
 
 // });
 
