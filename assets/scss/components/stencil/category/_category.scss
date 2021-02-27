@@ -10,10 +10,15 @@
     width: 100%;
 }
 
-.itemAddedNote{
-    display:inline-block;
-    display: none;
-    margin-left: 25px;
+.itemAddedNote{ 
+    margin-top: 25px;
     color: #5B86E3;
-
+}
+.show {
+    opacity: 1;
+    transition: opacity 400ms ;
+}
+.hide {
+    opacity: 0;
+    transition: opacity 400ms;
 }

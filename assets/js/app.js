@@ -183,16 +183,22 @@ window.stencilBootstrap = function stencilBootstrap(pageType, contextJSON = null
             .catch(error => console.error(error));
 
             // $("span.cart-quantity").text(quantity);
-            $('.cart-quantity').removeClass('countPill--positive', quantity = 0)
+            $('.cart-quantity').removeClass('countPill--positive', quantity == 0)
             $('.cart-quantity').addClass('countPill--positive', quantity > 0)
+            if(quantity>0){
+                $(".remove-all-items").addClass("show")
+            }
+            if(quantity==0){
+                $(".remove-all-items").addClass("hide")
+                $(".remove-all-items").removeClass("show")
+            }
 
-            $(".itemAddedNote").show("slow")
-            setTimeout(function(){$(".itemAddedNote").hide("slow")}, 3000)
+            switchClasses(".itemAddedNote");
+            setTimeout(function(){switchClasses(".itemAddedNote")}, 2000)
 
 
             //$('body').trigger('cart-quantity-update', cartNum);
 
-            $(".itemAddedNote").show("slow")
             // cartNum = data.lineItems.physicalItems.quantity
             // data[0].lineItems.physicalItems.quantity
             // countPill cart-quantity countPill--positive
@@ -201,12 +207,46 @@ window.stencilBootstrap = function stencilBootstrap(pageType, contextJSON = null
         }
     );
 
-    $("#closeDM").click(
-        function() {
-            $("#dialog-message").hide("slow");
+
+    $(".remove-all-items").click(
+        function(){
+            var cartId = $("#customAtC").attr('data-cartid');
+            var itemId
+            console.log(cartId)
+            
+            switchClasses(".remove-all-items")
+
+            getCart('/api/storefront/carts')
+            .then(data => {
+                itemId = data[0].lineItems.physicalItems[0].id;
+                console.log(itemId)
+                deleteCartItem(`/api/storefront/carts/`, cartId, itemId)
+            })
+            // .then(window.location.reload())
+
+
+            //var cartrmpath = '/cart.php?action=update&product_id=112&qty=0'  
+            // $.get(cartrmpath, function() {
+            //     window.location.reload();
+            // });
+
+            // .then(data => console.log(data))
+            // .catch(error => console.log(error));
+
         }
-    );
-    
+    )
+
+    function switchClasses(target) {
+        if ($(target).hasClass("hide")){
+            $(target).removeClass("hide")
+            $(target).addClass("show")
+        }
+        else {
+            $(target).addClass("hide")
+            $(target).removeClass("show")
+        }
+    }
+
     function validateData(data){
         var quantityV;
         console.log(data[0])
@@ -215,7 +255,7 @@ window.stencilBootstrap = function stencilBootstrap(pageType, contextJSON = null
             quantityV+=1
         }
         else {
-            quantityV=0;
+            quantityV=1;
         }
         console.log(quantityV)
         $("span.cart-quantity").text(quantityV);
@@ -242,6 +282,25 @@ window.stencilBootstrap = function stencilBootstrap(pageType, contextJSON = null
         .then(response => response.json());
     };
 
+    function deleteCartItem(url, cartId, itemId) {
+        return fetch(url + cartId + '/items/' + itemId,  {
+            method: "DELETE",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json",}
+        })
+        .then(response => response.json());
+     };
+
+     function deleteCart(url, cartId) {
+        return fetch(url + cartId + '/items/', {
+            method: "DELETE",
+            credentials: "same-origin",
+            headers: {"Content-Type": "application/json",}
+        })
+        .then(response => response.json());
+    };
+
     function addCartItem(url, cartId, cartItems) {
         return fetch(url + cartId + '/items', {
             method: "POST",
@@ -253,14 +312,6 @@ window.stencilBootstrap = function stencilBootstrap(pageType, contextJSON = null
         .then(response => response.json());
    };
 
-    function deleteCart(url, cartId) {
-        return fetch(url + cartId + '/items/', {
-            method: "DELETE",
-            credentials: "same-origin",
-            headers: {"Content-Type": "application/json",}
-        })
-        .then(response => response.json());
-    };
 
 // });
 
