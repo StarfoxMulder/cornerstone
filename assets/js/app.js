@@ -128,6 +128,7 @@ window.stencilBootstrap = function stencilBootstrap(pageType, contextJSON = null
     //     console.log(this.dataset.test)
     // });
 
+
     $('.card-figure').hover(
     	function() {
             var image = $(this).find('.card-image');

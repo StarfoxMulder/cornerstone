@@ -17,6 +17,13 @@ category:
 
 {{#partial "page"}}
 
+<script>
+    // Note the lack of quotes around the jsContext handlebars helper, it becomes a string automatically.
+    var jsContext = JSON.parse({{jsContext}}); // jsContext would output "{\"myProductName\": \"Sample Product\"}" which can feed directly into your JavaScript
+    
+    console.log(jsContext); // Will output: Sample Product
+</script>
+
 {{> components/common/breadcrumbs breadcrumbs=breadcrumbs}}
 {{#if category.image}}
     {{> components/common/responsive-img
